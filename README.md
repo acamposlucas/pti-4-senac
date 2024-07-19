@@ -4,6 +4,7 @@
 O desenvolvimento de um aplicativo de manutenção e gerenciamento de vacinas tem como finalidade fornecer uma solução inovadora e acessível para ajudar adultos e idosos a manter suas vacinas atualizadas. Sua missão é simplificar e agilizar a consulta do histórico de vacinação e a comunicação de novidades e atualizações do calendário de vacinação para a sociedade. Facilitar o acesso a essas informações ajuda a proteger a saúde e o bem-estar dos usuários e contribui com a prevenção de doenças.
 
 # Trilha
+
 - [ ] Cadastrar usuário
 - [ ] Registrar membros em família
 - [ ] Editar membro de família
