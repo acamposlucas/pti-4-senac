@@ -32,22 +32,47 @@ namespace VacineMais.API.Services
             return true;
         }
 
-        public async Task<bool> Login(LoginDto dto)
+        public async Task<UsuarioLogadoDto> Login(LoginDto dto)
         {
             var usuario = await _context.Usuarios.SingleOrDefaultAsync(u => u.Username == dto.Username);
 
-            if (usuario == null || usuario.PasswordHash != HashPassword(dto.Password))
+            if (usuario == null 
+                || usuario.PasswordHash != HashPassword(dto.Password)
+                || !usuario.Ativo)
             {
-                return false;
+                return null;
             }
 
-            return true;
+            return new() { Id = usuario.Id, Username = usuario.Username, Email = usuario.Email };
+        }
+
+        public async Task<(bool, string)> InativarUsuarioPorUsername(string username)
+        {
+            var usuario = await GetUsuarioPorUsernameAsync(username);
+
+            if (usuario == null)
+            {
+                return (false, "Usuário não encontrado");
+            }
+
+            usuario.Ativo = false;
+
+            _context.Usuarios.Update(usuario);
+            await _context.SaveChangesAsync();
+            return (true, "Usuário deletado com sucesso");
         }
 
         public async Task<bool> VerificaUsername(string username)
         {
             var result = await _context.Usuarios.AnyAsync(u => u.Username == username);
             return result;
+        }
+
+        private async Task<Usuario?> GetUsuarioPorUsernameAsync(string username)
+        {
+            var usuario = await _context.Usuarios.SingleOrDefaultAsync(u => u.Username == username);
+
+            return usuario;
         }
 
         private string HashPassword(string password)

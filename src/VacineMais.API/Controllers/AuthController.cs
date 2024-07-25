@@ -28,14 +28,33 @@ namespace VacineMais.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto dto)
+        public async Task<ActionResult<UsuarioLogadoDto>> Login(LoginDto dto)
         {
-            if (!await _authService.Login(dto))
+            var result = await _authService.Login(dto);
+            if (result is null)
             {
                 return BadRequest("Credenciais inválidas");
             }
 
-            return Ok();
+            return Ok(result);
+        }
+
+        [HttpDelete("inativar")]
+        public async Task<ActionResult> InativarUsuarioPorUsername([FromBody] InativarLoginDto dto)
+        {
+            if (dto.Username == null)
+            {
+                return BadRequest();
+            }
+
+            var result = await _authService.InativarUsuarioPorUsername(dto.Username);
+
+            if (!result.Sucesso)
+            {
+                return BadRequest(result.Mensagem);
+            }
+
+            return Ok(result.Mensagem);
         }
 
         private async Task<bool> VerificaUsername(string username)
