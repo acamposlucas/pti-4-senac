@@ -27,6 +27,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IFamiliaService, FamiliaService>();
+builder.Services.AddScoped<IMembroService, MembroService>();
 
 builder.Services.AddControllers();
 

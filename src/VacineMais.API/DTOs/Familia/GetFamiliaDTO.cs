@@ -1,4 +1,4 @@
-﻿using VacineMais.API.Models;
+﻿using VacineMais.API.DTOs.Membro;
 
 namespace VacineMais.API.DTOs.Familia
 {
@@ -6,6 +6,6 @@ namespace VacineMais.API.DTOs.Familia
     {
         public int FamiliaId { get; set; }
         public int UsuarioId { get; set; }
-        public ICollection<Membro> Membros { get; set; } = new List<Membro>();
+        public ICollection<GetMembroDTO> Membros { get; set; } = new List<GetMembroDTO>();
     }
 }
