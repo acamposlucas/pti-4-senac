@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VacineMais.API.DTOs.Auth;
+using VacineMais.API.DTOs.Familia;
 using VacineMais.API.Services.Interfaces;
 
 namespace VacineMais.API.Controllers
@@ -16,14 +17,14 @@ namespace VacineMais.API.Controllers
         }
 
         [HttpPost("cadastrar")]
-        public async Task<IActionResult> Cadastrar(CadastroDto dto)
+        public async Task<ActionResult<GetFamiliaDTO>> Cadastrar(CadastroDto dto)
         {
             if (await VerificaUsername(dto.Username))
             {
                 return BadRequest("Já existe registro com esse usuário");
             }
 
-            var result = _authService.Cadastrar(dto);
+            var result = await _authService.Cadastrar(dto);
             return Ok(result);
         }
 

@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>();
 
+// Essas linhas zeram o banco de dados.
+//DbInitializer.Initialize(new AppDbContext());
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -23,6 +26,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IFamiliaService, FamiliaService>();
 
 builder.Services.AddControllers();
 

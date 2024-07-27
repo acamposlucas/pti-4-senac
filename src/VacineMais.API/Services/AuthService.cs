@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using VacineMais.API.Data;
 using VacineMais.API.DTOs.Auth;
+using VacineMais.API.DTOs.Familia;
 using VacineMais.API.Models;
 using VacineMais.API.Services.Interfaces;
 
@@ -11,13 +12,15 @@ namespace VacineMais.API.Services
     public class AuthService : IAuthService
     {
         private readonly AppDbContext _context;
+        private readonly IFamiliaService _familiaService;
 
-        public AuthService(AppDbContext context)
+        public AuthService(AppDbContext context, IFamiliaService familiaService)
         {
             _context = context;
+            _familiaService = familiaService;
         }
 
-        public async Task<bool> Cadastrar(CadastroDto dto)
+        public async Task<GetFamiliaDTO> Cadastrar(CadastroDto dto)
         {
             Usuario usuario = new()
             {
@@ -28,8 +31,9 @@ namespace VacineMais.API.Services
 
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
+            var result = await _familiaService.Inserir(new CreateFamiliaDto() { UsuarioId = usuario.Id });
 
-            return true;
+            return result;
         }
 
         public async Task<UsuarioLogadoDto> Login(LoginDto dto)

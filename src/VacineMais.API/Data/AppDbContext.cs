@@ -6,6 +6,8 @@ namespace VacineMais.API.Data
     public class AppDbContext : DbContext
     {
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Familia> Familia { get; set; }
+        public DbSet<Membro> Membro { get; set; }
 
         public AppDbContext()
         {
@@ -23,7 +25,15 @@ namespace VacineMais.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Familia>()
+                .HasMany(f => f.Membros)
+                .WithOne(m => m.Familia)
+                .HasForeignKey(m => m.FamiliaId);
+
+            modelBuilder.Entity<Membro>()
+                .HasOne(m => m.Familia)
+                .WithMany(f => f.Membros)
+                .HasForeignKey(m => m.FamiliaId);
         }
     }
 }
