@@ -9,6 +9,7 @@ namespace VacineMais.API.Data
         public DbSet<Familia> Familia { get; set; }
         public DbSet<Membro> Membro { get; set; }
         public DbSet<Imunobiologico> Imunobiologico { get; set; }
+        public DbSet<Dose> Dose { get; set; }
 
         public AppDbContext()
         {
@@ -41,6 +42,9 @@ namespace VacineMais.API.Data
 
             modelBuilder.Entity<Imunobiologico>()
                 .HasData(DbSeed.SeedImunobiologicos());
+
+            modelBuilder.Entity<Dose>()
+                .HasData(DbSeed.SeedDose());
         }
     }
 }
