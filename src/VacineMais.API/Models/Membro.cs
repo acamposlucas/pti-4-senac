@@ -11,5 +11,6 @@ namespace VacineMais.API.Models
         public DateTime DataNascimento { get; set; }
 
         public Familia Familia { get; set; }
+        public ICollection<Imunizacao> Imunizacoes { get; set; } = [];
     }
 }

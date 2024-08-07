@@ -19,5 +19,7 @@ namespace VacineMais.API.Models
         public int Codigo { get; set; }
         public string Descricao { get; set; } = string.Empty;
         public string Sigla { get; set; } = string.Empty;
+
+        public ICollection<Imunizacao> Imunizacoes { get; set; } = [];
     }
 }

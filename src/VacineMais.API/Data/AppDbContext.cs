@@ -10,6 +10,7 @@ namespace VacineMais.API.Data
         public DbSet<Membro> Membro { get; set; }
         public DbSet<Imunobiologico> Imunobiologico { get; set; }
         public DbSet<Dose> Dose { get; set; }
+        public DbSet<Imunizacao> Imunizacao { get; set; }
 
         public AppDbContext()
         {
@@ -45,6 +46,21 @@ namespace VacineMais.API.Data
 
             modelBuilder.Entity<Dose>()
                 .HasData(DbSeed.SeedDose());
+
+            modelBuilder.Entity<Imunizacao>()
+                .HasOne(i => i.Membro)
+                .WithMany(m => m.Imunizacoes)
+                .HasForeignKey(i => i.MembroId);
+
+            modelBuilder.Entity<Imunizacao>()
+                .HasOne(i => i.Imunobiologico)
+                .WithMany(b => b.Imunizacoes)
+                .HasForeignKey(i => i.ImunobiologicoId);
+
+            modelBuilder.Entity<Imunizacao>()
+                .HasOne(i => i.Dose)
+                .WithMany(d => d.Imunizacoes)
+                .HasForeignKey(i => i.DoseId);
         }
     }
 }

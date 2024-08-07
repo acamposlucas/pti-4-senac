@@ -30,6 +30,7 @@ builder.Services.AddScoped<IFamiliaService, FamiliaService>();
 builder.Services.AddScoped<IMembroService, MembroService>();
 builder.Services.AddScoped<IImunobiologicoService, ImunobiologicoService>();
 builder.Services.AddScoped<IDoseService, DoseService>();
+builder.Services.AddScoped<IImunizacaoService, ImunizacaoService>();
 
 builder.Services.AddControllers();
 
