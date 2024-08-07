@@ -15,6 +15,20 @@ namespace VacineMais.API.Controllers
             _membroService = membroService;
         }
 
+        [HttpGet]
+        [Route("{membroId:int}")]
+        public async Task<ActionResult<GetMembroDTO>> Buscar(int membroId)
+        {
+            var result = await _membroService.Buscar(membroId);
+
+            if (result is null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<ActionResult<GetMembroDTO>> Inserir(CreateMembroDTO dto)
         {
