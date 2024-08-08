@@ -46,9 +46,19 @@ namespace VacineMais.API.Services
             };
         }
 
-        public Task Deletar(int imunizacaoId)
+        public async Task<bool> Deletar(int imunizacaoId)
         {
-            throw new NotImplementedException();
+            Imunizacao? imunizacao = _context.Imunizacao.FirstOrDefault(x => x.Id == imunizacaoId);
+
+            if (imunizacao is null)
+            {
+                return false;
+            }
+
+            _context.Imunizacao.Remove(imunizacao);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<GetImunizacaoDTO> Inserir(CreateImunizacaoDTO createImunizacaoDTO)

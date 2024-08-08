@@ -7,6 +7,6 @@ namespace VacineMais.API.Services.Interfaces
         Task<GetImunizacaoDTO> Inserir(CreateImunizacaoDTO createImunizacaoDTO);
         Task<List<GetImunizacaoDTO>> ListarPorMembro(int membroId);
         Task<GetImunizacaoDTO> Atualizar(UpdateImunizacaoDTO updateImunizacaoDTO);
-        Task Deletar(int imunizacaoId);
+        Task<bool> Deletar(int imunizacaoId);
     }
 }
