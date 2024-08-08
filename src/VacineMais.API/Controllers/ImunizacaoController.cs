@@ -16,7 +16,7 @@ namespace VacineMais.API.Controllers
         }
 
         [HttpGet]
-        [Route("{imunizacaoId:int}")]
+        [Route("{membroId:int}")]
         public async Task<ActionResult<List<GetImunizacaoDTO>>> ListarPorMembro(int membroId)
         {
             var result = await _imunizacaoService.ListarPorMembro(membroId);
