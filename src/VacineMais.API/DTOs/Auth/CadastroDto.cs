@@ -1,10 +1,14 @@
-﻿namespace VacineMais.API.DTOs.Auth
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VacineMais.API.DTOs.Auth
 {
     public class CadastroDto
     {
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
-        public bool Ativo { get; set; } = true;
+        [Required(ErrorMessage = "O campo usuário é obrigatório")]
+        public string Username { get; set; } = string.Empty;
+        [Required(ErrorMessage = "O campo email é obrigatório")]
+        public string Email { get; set; } = string.Empty;
+        [Required(ErrorMessage = "O campo senha é obrigatório")]
+        public string Password { get; set; } = string.Empty;
     }
 }
