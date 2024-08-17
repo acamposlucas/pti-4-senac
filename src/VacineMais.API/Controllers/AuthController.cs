@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VacineMais.API.DTOs.Auth;
-using VacineMais.API.DTOs.Familia;
 using VacineMais.API.Services.Interfaces;
 
 namespace VacineMais.API.Controllers
@@ -17,7 +16,7 @@ namespace VacineMais.API.Controllers
         }
 
         [HttpPost("Cadastrar")]
-        public async Task<ActionResult<GetFamiliaDTO>> Cadastrar(CadastroDto dto)
+        public async Task<ActionResult<UsuarioLogadoDto>> Cadastrar(CadastroDto dto)
         {
             if (await VerificaUsername(dto.Username))
             {
@@ -28,7 +27,7 @@ namespace VacineMais.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         public async Task<ActionResult<UsuarioLogadoDto>> Login(LoginDto dto)
         {
             var result = await _authService.Login(dto);
@@ -40,7 +39,7 @@ namespace VacineMais.API.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("inativar")]
+        [HttpDelete("Inativar")]
         public async Task<ActionResult> InativarUsuarioPorUsername([FromBody] InativarLoginDto dto)
         {
             if (dto.Username == null)

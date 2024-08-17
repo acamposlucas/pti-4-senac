@@ -38,6 +38,18 @@ namespace VacineMais.API.Services
             return result;
         }
 
+        public async Task<Familia> BuscarPorUsuarioId(int usuarioId)
+        {
+            var result = await _context.Familia.FirstOrDefaultAsync(x => x.UsuarioId == usuarioId);
+
+            if (result is null)
+            {
+                return null;
+            }
+
+            return result;
+        }
+
         public async Task<GetFamiliaDTO> Inserir(CreateFamiliaDto createFamiliaDto)
         {
             Familia familia = new Familia

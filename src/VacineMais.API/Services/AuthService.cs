@@ -20,7 +20,7 @@ namespace VacineMais.API.Services
             _familiaService = familiaService;
         }
 
-        public async Task<GetFamiliaDTO> Cadastrar(CadastroDto dto)
+        public async Task<UsuarioLogadoDto> Cadastrar(CadastroDto dto)
         {
             Usuario usuario = new()
             {
@@ -31,23 +31,33 @@ namespace VacineMais.API.Services
 
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
-            var result = await _familiaService.Inserir(new CreateFamiliaDto() { UsuarioId = usuario.Id });
+            var familia = await _familiaService.Inserir(new CreateFamiliaDto() { UsuarioId = usuario.Id });
+
+            var result = new UsuarioLogadoDto
+            {
+                Email = usuario.Email,
+                Username = usuario.Username,
+                FamiliaId = familia.FamiliaId,
+                UsuarioId = usuario.Id
+            };
 
             return result;
         }
 
         public async Task<UsuarioLogadoDto> Login(LoginDto dto)
         {
-            var usuario = await _context.Usuarios.SingleOrDefaultAsync(u => u.Username == dto.Username);
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Username == dto.Username);
 
-            if (usuario == null 
+            if (usuario == null
                 || usuario.PasswordHash != HashPassword(dto.Password)
                 || !usuario.Ativo)
             {
                 return null;
             }
 
-            return new() { Id = usuario.Id, Username = usuario.Username, Email = usuario.Email };
+            var result = await RetornaUsuarioLogado(usuario.Id);
+
+            return result;
         }
 
         public async Task<(bool, string)> InativarUsuarioPorUsername(string username)
@@ -86,6 +96,25 @@ namespace VacineMais.API.Services
                 var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
                 return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
             }
+        }
+
+        private async Task<UsuarioLogadoDto> RetornaUsuarioLogado(int usuarioId)
+        {
+            var familia = await _familiaService.BuscarPorUsuarioId(usuarioId);
+            var usuario = await _context.Usuarios.FindAsync(usuarioId);
+
+            if (usuario is null || familia is null)
+            {
+                return null;
+            }
+
+            return new UsuarioLogadoDto
+            {
+                UsuarioId = usuarioId,
+                FamiliaId = familia.Id,
+                Email = usuario.Email,
+                Username = usuario.Username
+            };
         }
     }
 }
