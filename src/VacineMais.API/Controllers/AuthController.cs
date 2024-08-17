@@ -16,12 +16,12 @@ namespace VacineMais.API.Controllers
             _authService = authService;
         }
 
-        [HttpPost("cadastrar")]
+        [HttpPost("Cadastrar")]
         public async Task<ActionResult<GetFamiliaDTO>> Cadastrar(CadastroDto dto)
         {
             if (await VerificaUsername(dto.Username))
             {
-                return BadRequest("Já existe registro com esse usuário");
+                return BadRequest(new { Erro = "Nome de usuário já cadastrado" });
             }
 
             var result = await _authService.Cadastrar(dto);
