@@ -1,6 +1,6 @@
 import { FormEvent, useRef } from "react";
 import { CadastroDTO } from "../../@types/CadastroDTO";
-import Styles from "./cadastro.module.css";
+import { Button, Form } from "react-bootstrap";
 
 export function Cadastro() {
   const cadastroFormRef = useRef<HTMLFormElement>(null);
@@ -33,57 +33,88 @@ export function Cadastro() {
       );
 
       if (!response.ok) {
-        throw new Error("Erro ao enviar formulário");
+        const data = await response.json();
+        let msgErro = "";
+        if (data.erro) {
+          msgErro = data.erro;
+        }
+        throw new Error(`Não foi possível realizar o cadastro: ${msgErro}`);
       }
 
       const data = await response.json();
+
+      resetForm();
     } catch (error) {
-      console.error(error);
+      alert(error);
+    }
+
+    function resetForm() {
+      formData.forEach((_, key) => {
+        const input = cadastroFormRef.current?.elements.namedItem(
+          key as string
+        ) as HTMLInputElement | null;
+        if (input) {
+          input.value = "";
+        }
+      });
     }
   }
 
   return (
-    <>
+    <div className="container">
       <h1>Faça o seu cadastro</h1>
-      <form action="" onSubmit={handleFormSubmit} ref={cadastroFormRef}>
+      <Form action="" onSubmit={handleFormSubmit} ref={cadastroFormRef}>
         <legend hidden={true}>Faça o seu cadastro!</legend>
-        <label className={Styles.form__label} htmlFor="email">
-          Email
-        </label>
-        <input type="text" id="email" name="email" ref={emailRef} required />
-        <label className={Styles.form__label} htmlFor="username">
-          Usuário
-        </label>
-        <input
-          type="text"
-          id="usuario"
-          name="username"
-          ref={usuarioRef}
-          required
-        />
-        <label className={Styles.form__label} htmlFor="senha">
-          Senha
-        </label>
-        <input
-          type="password"
-          id="senha"
-          name="password"
-          ref={senhaRef}
-          required
-        />
-        <label className={Styles.form__label} htmlFor="confirmarSenha">
-          Confirme sua senha
-        </label>
-        <input
-          type="password"
-          id="confirmarSenha"
-          name="confirmarSenha"
-          ref={confirmarSenhaRef}
-        />
-        <button className={Styles.form__button} type="submit">
+        <Form.Group>
+          <Form.Label htmlFor="email">Email</Form.Label>
+          <Form.Control
+            className="mb-3"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Digite seu email"
+            ref={emailRef}
+            required
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label htmlFor="usuario">Usuário</Form.Label>
+          <Form.Control
+            className="mb-3"
+            type="text"
+            id="usuario"
+            name="username"
+            placeholder="Digite seu usuário"
+            ref={usuarioRef}
+            required
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label htmlFor="senha">Senha</Form.Label>
+          <Form.Control
+            className="mb-3"
+            type="password"
+            id="senha"
+            name="password"
+            ref={senhaRef}
+            required
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Label htmlFor="confirmarSenha">Confirme sua senha</Form.Label>
+          <Form.Control
+            className="mb-3"
+            type="password"
+            id="confirmarSenha"
+            name="confirmarSenha"
+            ref={confirmarSenhaRef}
+            required
+          />
+        </Form.Group>
+        <Button className="mx-auto d-block" variant="primary" type="submit">
           Cadastrar
-        </button>
-      </form>
-    </>
+        </Button>
+      </Form>
+    </div>
   );
 }
