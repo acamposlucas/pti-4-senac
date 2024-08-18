@@ -20,6 +20,7 @@ namespace VacineMais.API.Services
         {
             Familia familia = await _context.Familia
                 .Include(f => f.Membros)
+                    .ThenInclude(m => m.CarteiraVacinacao)
                 .FirstOrDefaultAsync(x => x.Id == familiaId);
 
             if (familia is null)
@@ -31,7 +32,7 @@ namespace VacineMais.API.Services
             {
                 FamiliaId = familia.Id,
                 Membros = familia.Membros
-                    .Select(m => new GetMembroDTO { Id = m.Id, Nome = m.Nome, DataNascimento = m.DataNascimento, FamiliaId = m.FamiliaId }).ToList(),
+                    .Select(m => new GetMembroDTO { Id = m.Id, Nome = m.Nome, DataNascimento = m.DataNascimento, FamiliaId = m.FamiliaId, CarteiraVacinacaoId = m.CarteiraVacinacaoId }).ToList(),
                 UsuarioId = familia.UsuarioId,
             };
 

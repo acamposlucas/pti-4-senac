@@ -9,10 +9,12 @@ namespace VacineMais.API.Services
     public class MembroService : IMembroService
     {
         private readonly AppDbContext _context;
+        private readonly ICarteiraVacinacaoService _carteiraVacinacaoService;
 
-        public MembroService(AppDbContext context)
+        public MembroService(AppDbContext context, ICarteiraVacinacaoService carteiraVacinacaoService)
         {
             _context = context;
+            _carteiraVacinacaoService = carteiraVacinacaoService;
         }
 
         public async Task<GetMembroDTO> Buscar(int id)
@@ -61,13 +63,15 @@ namespace VacineMais.API.Services
 
             _context.Membro.Add(membro);
             await _context.SaveChangesAsync();
+            var cv = await _carteiraVacinacaoService.Inserir(membro);
 
             return new GetMembroDTO
             {
                 Id = membro.Id,
                 Nome = membro.Nome,
                 DataNascimento = membro.DataNascimento,
-                FamiliaId = membro.FamiliaId
+                FamiliaId = membro.FamiliaId,
+                CarteiraVacinacaoId = cv.CarteiraVacinacaoId
             };
         }
 

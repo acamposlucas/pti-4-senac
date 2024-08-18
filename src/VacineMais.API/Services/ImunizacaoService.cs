@@ -68,7 +68,8 @@ namespace VacineMais.API.Services
                 MembroId = createImunizacaoDTO.MembroId,
                 ImunobiologicoId = createImunizacaoDTO.ImunobiologicoId,
                 DoseId = createImunizacaoDTO.DoseId,
-                ProximaDoseEm = createImunizacaoDTO.ProximaDoseEm
+                ProximaDoseEm = createImunizacaoDTO.ProximaDoseEm,
+                CarteiraVacinacaoId = createImunizacaoDTO.CarteiraImunizacaoId,
             };
 
             _context.Imunizacao.Add(imunizacao);
