@@ -14,14 +14,25 @@ import { Dose } from "../../@types/Dose";
 export function CarteiraVacinacaoPage() {
   const [carteiraVacinacao, setCarteiraVacinacao] =
     useState<CarteiraVacinacao>();
-
+  const [imunobiologicos, setImunobiologicos] = useState<Imunobiologico[]>([]);
+  const [doses, setDoses] = useState<Dose[]>([]);
   const [atualizarCarteira, setAtualizarCarteira] = useState<boolean>(false);
-  // const { user } = useContext(UserContext);
+
+  const [showModalAdicionar, setShowModalAdicionar] = useState(false);
+
+  const handleCloseModalAdicionar = () => setShowModalAdicionar(false);
+  const handleShowModalAdicionar = () => setShowModalAdicionar(true);
+
+  const adicionarVacinaFormRef = useRef<HTMLFormElement>(null);
+  const vacinaRef = useRef<HTMLSelectElement>(null);
+  const doseRef = useRef<HTMLSelectElement>(null);
+  const proximaDoseRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setAtualizarCarteira(false);
     buscaCarteiraVacinacao();
-  }, [atualizarCarteira]);
+    configurarControlesModal();
+  }, [atualizarCarteira, showModalAdicionar]);
 
   async function buscaCarteiraVacinacao() {
     try {
@@ -40,6 +51,7 @@ export function CarteiraVacinacaoPage() {
       }
 
       const data: CarteiraVacinacao = await response.json();
+      console.log(data);
       setCarteiraVacinacao(data);
     } catch (error) {
       alert(error);
@@ -50,6 +62,98 @@ export function CarteiraVacinacaoPage() {
     setAtualizarCarteira(true);
   }
 
+  async function configurarControlesModal() {
+    await buscaImunobiologicos();
+    await buscaDoses();
+  }
+
+  async function buscaImunobiologicos() {
+    try {
+      const response = await fetch(
+        "https://localhost:7168/api/Imunobiologico",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Não foi possível abrir os dados desse membro");
+      }
+
+      const data: Imunobiologico[] = await response.json();
+      setImunobiologicos(data);
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  async function buscaDoses() {
+    try {
+      const response = await fetch("https://localhost:7168/api/Dose", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Não foi possível abrir os dados desse membro");
+      }
+
+      const data: Dose[] = await response.json();
+      setDoses(data);
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  async function adicionarVacina() {
+    const formData = new FormData(
+      adicionarVacinaFormRef.current as HTMLFormElement
+    );
+
+    const proximaDoseEm =
+      (formData.get("proximaDoseEm") as string) != ""
+        ? (formData.get("proximaDoseEm") as string)
+        : null;
+
+    const dto = {
+      carteiraVacinacaoId: carteiraVacinacao?.carteiraVacinacaoId,
+      membroId: carteiraVacinacao?.membroId,
+      imunobiologicoId: parseInt(
+        formData.get("imunobiologico") as string
+      ) as number,
+      doseId: parseInt(formData.get("dose") as string) as number,
+      proximaDoseEm,
+    };
+    console.log(dto);
+    try {
+      const response = await fetch("https://localhost:7168/api/Imunizacao", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dto),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `Request failed: ${response.status} ${response.statusText} - ${errorText}`
+        );
+      }
+
+      handleAtualizarCarteira();
+      handleCloseModalAdicionar();
+    } catch (error: any) {
+      console.error("Falha na chamada à API:", error);
+      alert("Falha ao atualizar imunização: " + error.message);
+    }
+  }
+
   return (
     <div className="container">
       <h1>Carteira de vacinação</h1>
@@ -57,6 +161,9 @@ export function CarteiraVacinacaoPage() {
         <strong>{carteiraVacinacao?.nome}</strong>
         <span>{carteiraVacinacao?.idade}</span>
       </div>
+      <Button variant="primary" onClick={handleShowModalAdicionar}>
+        Adicionar vacina
+      </Button>
       <div className="d-flex flex-column gap-2">
         {carteiraVacinacao?.imunizacoes.map((i) => (
           <ImunizacaoCard
@@ -66,6 +173,65 @@ export function CarteiraVacinacaoPage() {
           />
         ))}
       </div>
+      <Modal show={showModalAdicionar} onHide={handleCloseModalAdicionar}>
+        <Modal.Header closeButton>
+          <Modal.Title>Adicionar vacina</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form ref={adicionarVacinaFormRef}>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label id="imunobiologico">Vacina</Form.Label>
+              {imunobiologicos.length > 0 ? (
+                <Form.Select
+                  id="imunobiologico"
+                  name="imunobiologico"
+                  ref={vacinaRef}
+                >
+                  {imunobiologicos.map((i) => (
+                    <option key={i.id} value={i.id}>
+                      {i.descricao}
+                    </option>
+                  ))}
+                </Form.Select>
+              ) : (
+                <p>Carregando</p>
+              )}
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label id="dose">Dose</Form.Label>
+              {doses.length > 0 ? (
+                <Form.Select id="dose" name="dose" ref={doseRef}>
+                  {doses.map((i) => (
+                    <option key={i.id} value={i.id}>
+                      {i.descricao}
+                    </option>
+                  ))}
+                </Form.Select>
+              ) : (
+                <p>Carregando</p>
+              )}
+            </Form.Group>
+            <Form.Group>
+              <Form.Label htmlFor="proximaDoseEm">Próxima dose em:</Form.Label>
+              <input
+                ref={proximaDoseRef}
+                className="ms-3"
+                type="date"
+                name="proximaDoseEm"
+                id="proximaDoseEm"
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModalAdicionar}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={adicionarVacina}>
+            Adicionar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

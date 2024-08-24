@@ -27,7 +27,8 @@ public class CarteiraVacinacao
                 DescricaoImunobiologico = x.Imunobiologico.Descricao,
                 ProximaDoseEm = x.ProximaDoseEm
             }).ToList(),
-            MembroId = carteiraVacinacao.MembroId
+            MembroId = carteiraVacinacao.MembroId,
+            CarteiraVacinacaoId = carteiraVacinacao.Id
         };
     }
 

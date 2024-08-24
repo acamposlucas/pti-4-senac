@@ -6,6 +6,6 @@
         public int ImunobiologicoId { get; set; }
         public int DoseId { get; set; }
         public DateTime? ProximaDoseEm { get; set; }
-        public int CarteiraImunizacaoId { get; set; }
+        public int CarteiraVacinacaoId { get; set; }
     }
 }
