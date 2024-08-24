@@ -77,7 +77,8 @@ function ImunizacaoCard({
   imunizacao: Imunizacao;
   handleAtualizarCarteira: () => void;
 }) {
-  const [show, setShow] = useState(false);
+  const [showModalEditar, setShowModalEditar] = useState(false);
+  const [showModalExcluir, setShowModalExcluir] = useState(false);
   const [imunobiologicos, setImunobiologicos] = useState<Imunobiologico[]>([]);
   const [doses, setDoses] = useState<Dose[]>([]);
 
@@ -86,8 +87,11 @@ function ImunizacaoCard({
   const doseRef = useRef<HTMLSelectElement>(null);
   const proximaDoseRef = useRef<HTMLInputElement>(null);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleCloseModalEditar = () => setShowModalEditar(false);
+  const handleShowModalEditar = () => setShowModalEditar(true);
+
+  const handleCloseModalExcluir = () => setShowModalExcluir(false);
+  const handleShowModalExcluir = () => setShowModalExcluir(true);
 
   async function editarImunizacao() {
     const formData = new FormData(
@@ -124,7 +128,7 @@ function ImunizacaoCard({
         );
       }
       handleAtualizarCarteira();
-      handleClose();
+      handleCloseModalEditar();
     } catch (error: any) {
       console.error("Falha na chamada à API:", error);
       alert("Falha ao atualizar imunização: " + error.message);
@@ -179,9 +183,32 @@ function ImunizacaoCard({
     }
   }
 
+  async function handleConfirmarExcluirVacina() {
+    try {
+      const response = await fetch(
+        `https://localhost:7168/api/Imunizacao/${imunizacao.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Não foi possível deletar a vacina");
+      }
+
+      handleCloseModalExcluir();
+      handleAtualizarCarteira();
+    } catch (error) {
+      alert(error);
+    }
+  }
+
   useEffect(() => {
     configurarControlesModal();
-  }, [show]);
+  }, [showModalEditar]);
 
   return (
     <>
@@ -192,13 +219,15 @@ function ImunizacaoCard({
           {imunizacao.proximaDoseEm ? <p>{imunizacao.proximaDoseEm}</p> : null}
         </CardBody>
         <CardFooter className="d-flex gap-2">
-          <Button variant="secondary" onClick={handleShow}>
+          <Button variant="secondary" onClick={handleShowModalEditar}>
             Editar
           </Button>
-          <Button variant="danger">Excluir</Button>
+          <Button variant="danger" onClick={handleShowModalExcluir}>
+            Excluir
+          </Button>
         </CardFooter>
       </Card>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={showModalEditar} onHide={handleCloseModalEditar}>
         <Modal.Header closeButton>
           <Modal.Title>Editar vacina</Modal.Title>
         </Modal.Header>
@@ -249,11 +278,30 @@ function ImunizacaoCard({
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleCloseModalEditar}>
             Close
           </Button>
           <Button variant="primary" onClick={editarImunizacao}>
             Atualizar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showModalExcluir} onHide={handleCloseModalExcluir}>
+        <Modal.Header closeButton>
+          <Modal.Title>Excluir vacina</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Confirma a exclusão do imunobiológico{" "}
+            <strong>{imunizacao.descricaoImunobiologico}</strong>?
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModalExcluir}>
+            Close
+          </Button>
+          <Button variant="danger" onClick={handleConfirmarExcluirVacina}>
+            Excluir
           </Button>
         </Modal.Footer>
       </Modal>
