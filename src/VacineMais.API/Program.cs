@@ -16,8 +16,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.AllowAnyHeader();
                           policy.WithOrigins("*");
+                          policy.AllowAnyHeader();
+                          policy.AllowAnyMethod();
                       });
 });
 
@@ -37,6 +38,7 @@ builder.Services.AddScoped<ICarteiraVacinacaoService, CarteiraVacinacaoService>(
 builder.Services.AddControllers();
 
 var app = builder.Build();
+app.UseCors(MyAllowSpecificOrigins);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -46,8 +48,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseCors(MyAllowSpecificOrigins);
 
 app.MapControllers();
 
