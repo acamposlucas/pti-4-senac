@@ -1,8 +1,14 @@
-import { FormEvent, useRef } from "react";
+import { FormEvent, useContext, useRef } from "react";
 import { CadastroDTO } from "../../@types/CadastroDTO";
 import { Button, Form } from "react-bootstrap";
+import UserContext from "../../contexts/UserContext";
+import { UsuarioLogado } from "../../@types/UsuarioLogado";
+import { useNavigate } from "react-router-dom";
 
 export function Cadastro() {
+  const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const cadastroFormRef = useRef<HTMLFormElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const usuarioRef = useRef<HTMLInputElement>(null);
@@ -41,9 +47,11 @@ export function Cadastro() {
         throw new Error(`Não foi possível realizar o cadastro: ${msgErro}`);
       }
 
-      const data = await response.json();
+      const data: UsuarioLogado = await response.json();
 
+      setUser(data);
       resetForm();
+      navigate("/home");
     } catch (error) {
       alert(error);
     }
