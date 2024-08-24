@@ -8,6 +8,7 @@ import { Login } from "./pages/Login/index.tsx";
 import { CarteiraVacinacao } from "./pages/CarteiraVacinacao/index.tsx";
 import { NovoMembro } from "./pages/NovoMembro/index.tsx";
 import { NovoRegistro } from "./pages/NovoRegistro/index.tsx";
+import { UserContextProvider } from "./contexts/UserContext.tsx";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <UserContextProvider>
+      <RouterProvider router={router} />
+    </UserContextProvider>
   </React.StrictMode>
 );
