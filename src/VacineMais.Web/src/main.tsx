@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Home } from "./pages/Home/index.tsx";
 import { Cadastro } from "./pages/Cadastro/index.tsx";
 import { Login } from "./pages/Login/index.tsx";
-import { CarteiraVacinacao } from "./pages/CarteiraVacinacao/index.tsx";
+import { CarteiraVacinacaoPage } from "./pages/CarteiraVacinacao/index.tsx";
 import { NovoMembro } from "./pages/NovoMembro/index.tsx";
 import { NovoRegistro } from "./pages/NovoRegistro/index.tsx";
 import { UserContextProvider } from "./contexts/UserContext.tsx";
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/carteiraVacinacao",
-        element: <CarteiraVacinacao />,
+        element: <CarteiraVacinacaoPage />,
       },
       {
         path: "/novoMembro",
