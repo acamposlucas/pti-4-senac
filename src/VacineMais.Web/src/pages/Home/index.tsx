@@ -1,47 +1,52 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import UserContext from '../../contexts/UserContext';
 import Card from 'react-bootstrap/Card';
 
+
 export function Home() {
   const { setUser } = useContext(UserContext);
-  const [membros, setMembros] = useState([]); 
 
   useEffect(() => {
+    
     fetch('https://localhost:7168/api/Familia/{id}')
       .then(response => response.json())
       .then(data => {
-        setUser(data);
-        setMembros(data.membros);
+        setUser(data); 
       })
       .catch(error => {
         console.error('Erro ao buscar dados:', error);
       });
-  }, [setUser]);
+  }, [setUser]); 
 
   return (
     <div>
       <h1>Bem-vindo!</h1>
-      <MembrosCadas membros={membros} /> 
+      <MembrosCadas /> 
     </div>
   );
 }
 
-function MembrosCadas({ membros }) { 
+
+
+function MembrosCadas() {
   return (
     <>
-      {membros.map((membro, index) => (
+      {[
+        'Primary',
+        'Light',
+            ].map((variant) => (
         <Card
-          bg={index % 2 === 0 ? 'primary' : 'light'}
-          key={membro.id}
-          text={index % 2 === 0 ? 'white' : 'dark'}
+          bg={variant.toLowerCase()}
+          key={variant}
+          text={variant.toLowerCase() === 'light' ? 'dark' : 'white'}
           style={{ width: '18rem' }}
           className="mb-2"
         >
-          <Card.Header>{`Membro ${membro.id}`}</Card.Header>
+          <Card.Header>Membro</Card.Header>
           <Card.Body>
-            <Card.Title>{membro.nome}</Card.Title>
+            <Card.Title> Nome Membro</Card.Title>
             <Card.Text>
-             Informações
+              Idade: 
             </Card.Text>
           </Card.Body>
         </Card>
@@ -50,4 +55,4 @@ function MembrosCadas({ membros }) {
   );
 }
 
-export default Home;
+export default Home; 
