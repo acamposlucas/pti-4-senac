@@ -7,7 +7,7 @@ export function Home() {
   const { setUser } = useContext(UserContext);
 
   useEffect(() => {
-    // Substitua a URL pela URL correta da sua API
+    
     fetch('https://localhost:7168/api/Imunizacao')
       .then(response => response.json())
       .then(data => {
@@ -21,13 +21,13 @@ export function Home() {
   return (
     <div>
       <h1>Bem-vindo!</h1>
-      <MembrosCadas /> {/* Adicione MembrosCadas aqui se necessário */}
+      <MembrosCadas /> 
     </div>
   );
 }
 
 
-// Componente MembrosCadas
+
 function MembrosCadas() {
   return (
     <>
@@ -55,4 +55,4 @@ function MembrosCadas() {
   );
 }
 
-export default Home; // Exporta Home como padrão
+export default Home; 
