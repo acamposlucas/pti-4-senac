@@ -5,7 +5,7 @@ using VacineMais.API.Services.Interfaces;
 namespace VacineMais.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class FamiliaController : ControllerBase
     {
         private readonly IFamiliaService _familiaService;

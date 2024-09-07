@@ -5,7 +5,7 @@ using VacineMais.API.Services.Interfaces;
 namespace VacineMais.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class MembroController : ControllerBase
     {
         private readonly IMembroService _membroService;
@@ -38,6 +38,7 @@ namespace VacineMais.API.Controllers
         }
 
         [HttpPut]
+        [Route("{id:int}")]
         public async Task<ActionResult<GetMembroDTO>> Atualizar(UpdateMembroDTO dto)
         {
             if (dto.Id == 0 || dto.Id == null)
