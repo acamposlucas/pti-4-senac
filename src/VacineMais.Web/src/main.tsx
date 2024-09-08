@@ -28,7 +28,7 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/carteiraVacinacao",
+        path: "/carteiraVacinacao/:membroId",
         element: <CarteiraVacinacaoPage />,
       },
       {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { CarteiraVacinacao, Imunizacao } from "../../@types/CarteiraVacinacao";
 import {
   Button,
@@ -10,8 +10,11 @@ import {
 } from "react-bootstrap";
 import { Imunobiologico } from "../../@types/Imunobiologico";
 import { Dose } from "../../@types/Dose";
+import UserContext from "../../contexts/UserContext";
+import { useParams } from "react-router-dom";
 
 export function CarteiraVacinacaoPage() {
+  let { membroId } = useParams();
   const [carteiraVacinacao, setCarteiraVacinacao] =
     useState<CarteiraVacinacao>();
   const [imunobiologicos, setImunobiologicos] = useState<Imunobiologico[]>([]);
@@ -37,7 +40,7 @@ export function CarteiraVacinacaoPage() {
   async function buscaCarteiraVacinacao() {
     try {
       const response = await fetch(
-        "https://localhost:7168/api/CarteiraVacinacao/1",
+        `https://localhost:7168/api/CarteiraVacinacao/${membroId}`,
         {
           method: "GET",
           headers: {
@@ -51,7 +54,6 @@ export function CarteiraVacinacaoPage() {
       }
 
       const data: CarteiraVacinacao = await response.json();
-      console.log(data);
       setCarteiraVacinacao(data);
     } catch (error) {
       alert(error);
@@ -129,7 +131,7 @@ export function CarteiraVacinacaoPage() {
       doseId: parseInt(formData.get("dose") as string) as number,
       proximaDoseEm,
     };
-    console.log(dto);
+
     try {
       const response = await fetch("https://localhost:7168/api/Imunizacao", {
         method: "POST",
