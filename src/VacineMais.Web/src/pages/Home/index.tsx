@@ -3,21 +3,9 @@ import UserContext from "../../contexts/UserContext";
 import Card from "react-bootstrap/Card";
 import { Button, Form, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
-// Define a interface para os dados da família
-interface Membro {
-  id: number;
-  familiaId: number;
-  nome: string;
-  dataNascimento: string;
-  carteiraVacinacaoId: number;
-}
-
-interface Familia {
-  familiaId: number;
-  usuarioId: number;
-  membros: Membro[];
-}
+import { formataData, formataIdade } from "../../utils";
+import { Familia } from "../../@types/Familia";
+import { Membro } from "../../@types/Membro";
 
 export function Home() {
   const { user } = useContext(UserContext);
@@ -47,8 +35,9 @@ export function Home() {
   }
 
   return (
-    <div>
-      <h1>Bem-vindo!</h1>
+    <>
+      <span className="d-block fs-4">Bem-vindo!</span>
+      <span className="d-block text-center fs-1">Minha família</span>
       <div className="mb-2">
         <Link to={"/novoMembro"}>
           {" "}
@@ -68,7 +57,7 @@ export function Home() {
       ) : (
         <p>Não há membros cadastrados</p>
       )}
-    </div>
+    </>
   );
 }
 
@@ -144,24 +133,12 @@ function MembroCard({ membro, setAtualizarFamilia }: MembroCardProps) {
   }
   return (
     <>
-      <Card
-        bg="primary"
-        key={membro.id}
-        text="white"
-        style={{ width: "18rem" }}
-        className="mb-2"
-      >
-        <Card.Header>{`Membro ID: ${membro.id}`}</Card.Header>
+      <Card bg="primary" key={membro.id} text="white" className="mb-2">
         <Card.Body>
-          <Card.Title>{membro.nome}</Card.Title>
-          <Card.Text>
-            Data de Nascimento:{" "}
-            {new Date(membro.dataNascimento).toLocaleDateString()}{" "}
-            {/* Formatar data */}
-          </Card.Text>
-          <Card.Text>
-            Carteira de Vacinação ID: {membro.carteiraVacinacaoId}
-          </Card.Text>
+          <Card.Title>Carteira de vacinação</Card.Title>
+          <strong className="d-block">{membro.nome}</strong>{" "}
+          <small className="fs-6">{formataIdade(membro.dataNascimento)}</small>
+          <Card.Text>{formataData(membro.dataNascimento)}</Card.Text>
         </Card.Body>
         <Card.Footer>
           <div className="btn-group">
@@ -194,7 +171,17 @@ function MembroCard({ membro, setAtualizarFamilia }: MembroCardProps) {
               variant="danger"
               onClick={handleDeletarMembro}
             >
-              Deletar
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fillRule="inherit"
+                className="bi bi-trash"
+                viewBox="0 0 16 16"
+              >
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z" />
+                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z" />
+              </svg>
             </Button>
           </div>
         </Card.Footer>
@@ -222,7 +209,7 @@ function MembroCard({ membro, setAtualizarFamilia }: MembroCardProps) {
               type="date"
               name="dataNascimento"
               id="dataNascimento"
-              defaultValue={membro.dataNascimento}
+              defaultValue={membro.dataNascimento.split("T")[0]}
             ></Form.Control>
           </Form>
         </Modal.Body>

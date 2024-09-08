@@ -4,14 +4,14 @@ import { Link, Outlet } from "react-router-dom";
 
 function App() {
   return (
-    <>
+    <div className="container">
       <header>
         <Link to={"home"}>Página inicial</Link>
       </header>
-      <main>
+      <main className="mx-auto">
         <Outlet />
       </main>
-    </>
+    </div>
   );
 }
 
