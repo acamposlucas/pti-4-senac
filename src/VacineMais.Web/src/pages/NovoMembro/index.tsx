@@ -1,26 +1,28 @@
-import { useRef } from "react";
+import { FormEvent, useContext, useRef } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../../contexts/UserContext";
+import { NovoMembroDTO } from "../../@types/NovoMembroDTO";
 
 export function NovoMembro() {
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const membroFormRef = useRef(null);
-  const nomeRef = useRef(null);
-  const dataNascimentoRef = useRef(null);
+  const membroFormRef = useRef<HTMLFormElement>(null);
 
-  async function handleFormSubmit(e) {
+  async function handleFormSubmit(e: FormEvent) {
     e.preventDefault();
 
-    const formData = new FormData(membroFormRef.current);
+    const formData = new FormData(membroFormRef.current as HTMLFormElement);
 
-    const novoMembro = {
-      nome: formData.get("nome"),
-      dataNascimento: formData.get("dataNascimento"),
+    const novoMembro: NovoMembroDTO = {
+      nome: formData.get("nome") as string,
+      dataNascimento: new Date(formData.get("dataNascimento") as string),
+      familiaId: user?.familiaId as number,
     };
 
     try {
-      const response = await fetch("https://localhost:7168/api/Membro/Cadastrar", {
+      const response = await fetch("https://localhost:7168/api/Membro", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +39,6 @@ export function NovoMembro() {
         throw new Error(`Não foi possível cadastrar o membro: ${msgErro}`);
       }
 
-      alert("Membro cadastrado com sucesso!");
       resetForm();
       navigate("/home");
     } catch (error) {
@@ -46,7 +47,9 @@ export function NovoMembro() {
 
     function resetForm() {
       formData.forEach((_, key) => {
-        const input = membroFormRef.current?.elements.namedItem(key);
+        const input = membroFormRef.current?.elements.namedItem(
+          key as string
+        ) as HTMLInputElement | null;
         if (input) {
           input.value = "";
         }
@@ -67,7 +70,6 @@ export function NovoMembro() {
             id="nome"
             name="nome"
             placeholder="Digite o nome"
-            ref={nomeRef}
             required
           />
         </Form.Group>
@@ -78,12 +80,11 @@ export function NovoMembro() {
             type="date"
             id="dataNascimento"
             name="dataNascimento"
-            ref={dataNascimentoRef}
             required
           />
         </Form.Group>
         <Button className="mx-auto d-block" variant="primary" type="submit">
-         
+          Cadastrar
         </Button>
       </Form>
     </div>
