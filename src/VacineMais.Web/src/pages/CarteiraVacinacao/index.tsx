@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CarteiraVacinacao, Imunizacao } from "../../@types/CarteiraVacinacao";
 import {
   Button,
@@ -10,8 +10,8 @@ import {
 } from "react-bootstrap";
 import { Imunobiologico } from "../../@types/Imunobiologico";
 import { Dose } from "../../@types/Dose";
-import UserContext from "../../contexts/UserContext";
 import { useParams } from "react-router-dom";
+import { formataData } from "../../utils";
 
 export function CarteiraVacinacaoPage() {
   let { membroId } = useParams();
@@ -27,9 +27,6 @@ export function CarteiraVacinacaoPage() {
   const handleShowModalAdicionar = () => setShowModalAdicionar(true);
 
   const adicionarVacinaFormRef = useRef<HTMLFormElement>(null);
-  const vacinaRef = useRef<HTMLSelectElement>(null);
-  const doseRef = useRef<HTMLSelectElement>(null);
-  const proximaDoseRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setAtualizarCarteira(false);
@@ -156,14 +153,26 @@ export function CarteiraVacinacaoPage() {
     }
   }
 
+  if (!carteiraVacinacao) {
+    return <p>Carregando...</p>;
+  }
+
   return (
     <div className="container">
       <h1>Carteira de vacinação</h1>
-      <div className="d-flex flex-column">
+      <div className="d-flex flex-column mb-3">
         <strong>{carteiraVacinacao?.nome}</strong>
-        <span>{carteiraVacinacao?.idade}</span>
+        <span>
+          {carteiraVacinacao?.idade! <= 1
+            ? `${carteiraVacinacao?.idade} ano`
+            : `${carteiraVacinacao?.idade} anos`}
+        </span>
       </div>
-      <Button variant="primary" onClick={handleShowModalAdicionar}>
+      <Button
+        className="mb-3"
+        variant="primary"
+        onClick={handleShowModalAdicionar}
+      >
         Adicionar vacina
       </Button>
       <div className="d-flex flex-column gap-2">
@@ -184,11 +193,7 @@ export function CarteiraVacinacaoPage() {
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label id="imunobiologico">Vacina</Form.Label>
               {imunobiologicos.length > 0 ? (
-                <Form.Select
-                  id="imunobiologico"
-                  name="imunobiologico"
-                  ref={vacinaRef}
-                >
+                <Form.Select id="imunobiologico" name="imunobiologico">
                   {imunobiologicos.map((i) => (
                     <option key={i.id} value={i.id}>
                       {i.descricao}
@@ -202,7 +207,7 @@ export function CarteiraVacinacaoPage() {
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label id="dose">Dose</Form.Label>
               {doses.length > 0 ? (
-                <Form.Select id="dose" name="dose" ref={doseRef}>
+                <Form.Select id="dose" name="dose">
                   {doses.map((i) => (
                     <option key={i.id} value={i.id}>
                       {i.descricao}
@@ -215,9 +220,7 @@ export function CarteiraVacinacaoPage() {
             </Form.Group>
             <Form.Group>
               <Form.Label htmlFor="proximaDoseEm">Próxima dose em:</Form.Label>
-              <input
-                ref={proximaDoseRef}
-                className="ms-3"
+              <Form.Control
                 type="date"
                 name="proximaDoseEm"
                 id="proximaDoseEm"
@@ -384,7 +387,9 @@ function ImunizacaoCard({
         <CardBody>
           <strong>{imunizacao.descricaoImunobiologico}</strong>
           <p>{imunizacao.descricaoDose}</p>
-          {imunizacao.proximaDoseEm ? <p>{imunizacao.proximaDoseEm}</p> : null}
+          {imunizacao.proximaDoseEm ? (
+            <p>Próxima dose em: {formataData(imunizacao.proximaDoseEm)}</p>
+          ) : null}
         </CardBody>
         <CardFooter className="d-flex gap-2">
           <Button variant="secondary" onClick={handleShowModalEditar}>
@@ -435,9 +440,7 @@ function ImunizacaoCard({
             </Form.Group>
             <Form.Group>
               <Form.Label htmlFor="proximaDoseEm">Próxima dose em:</Form.Label>
-              <input
-                ref={proximaDoseRef}
-                className="ms-3"
+              <Form.Control
                 type="date"
                 name="proximaDoseEm"
                 id="proximaDoseEm"
