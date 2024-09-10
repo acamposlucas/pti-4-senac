@@ -2,17 +2,21 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import UserContext from "../../contexts/UserContext";
 import Card from "react-bootstrap/Card";
 import { Button, Form, Modal } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { formataData, formataIdade } from "../../utils";
 import { Familia } from "../../@types/Familia";
 import { Membro } from "../../@types/Membro";
 
 export function Home() {
   const { user } = useContext(UserContext);
+  const navigate = useNavigate();
   const [familia, setFamilia] = useState<Familia | null>(null);
   const [atualizarFamilia, setAtualizarFamilia] = useState<boolean>(false);
 
   useEffect(() => {
+    if (user == null) {
+      navigate("/", { replace: true });
+    }
     setAtualizarFamilia(false);
 
     fetch(`https://localhost:7168/api/Familia/${user?.familiaId}`, {
