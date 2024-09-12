@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1F7DD677-9292-493D-9C6C-54E2E772B5C8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacineMais.API", "src\VacineMais.API\VacineMais.API.csproj", "{0C78C442-C051-4913-9005-B9A1CEE00038}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A6A8DD8D-180A-4324-AE7A-76926750F925} = {A6A8DD8D-180A-4324-AE7A-76926750F925}
-	EndProjectSection
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "VacineMais.Web", "src\VacineMais.Web\VacineMais.Web.esproj", "{A6A8DD8D-180A-4324-AE7A-76926750F925}"
 EndProject

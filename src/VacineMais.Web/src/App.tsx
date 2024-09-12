@@ -10,7 +10,7 @@ function App() {
 		<div className="container py-2">
 			<header className="mb-4">
 				<Link
-					to={user ? "home" : "cadastro"}
+					to={user != null ? "home" : ""}
 					className="d-flex align-items-center gap-2"
 					style={{ textDecoration: "none" }}
 				>
