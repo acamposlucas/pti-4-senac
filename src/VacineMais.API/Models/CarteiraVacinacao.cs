@@ -23,7 +23,9 @@ public class CarteiraVacinacao
             {
                 Id = x.Id,
                 MembroId = x.MembroId,
+                DoseId = x.DoseId,
                 DescricaoDose = x.Dose.Descricao,
+                ImunobiologicoId = x.ImunobiologicoId,
                 DescricaoImunobiologico = x.Imunobiologico.Descricao,
                 ProximaDoseEm = x.ProximaDoseEm
             }).ToList(),

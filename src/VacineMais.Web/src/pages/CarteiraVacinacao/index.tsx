@@ -377,9 +377,28 @@ function ImunizacaoCard({
     }
   }
 
+  async function abrirModalEditar(imunizacao: Imunizacao) {
+    // Fetch data for dropdown options
+    await configurarControlesModal();
+
+    if (vacinaRef.current && doseRef.current && proximaDoseRef.current) {
+        vacinaRef.current.value = imunizacao.imunobiologicoId.toString();
+        doseRef.current.value = imunizacao.doseId.toString();
+        proximaDoseRef.current.value = imunizacao.proximaDoseEm || '';
+    }
+
+    handleShowModalEditar();
+  }
+
   useEffect(() => {
-    configurarControlesModal();
-  }, [showModalEditar]);
+    if (showModalEditar) {
+      if (vacinaRef.current && doseRef.current && proximaDoseRef.current) {
+        vacinaRef.current.value = imunizacao.imunobiologicoId.toString();
+        doseRef.current.value = imunizacao.doseId.toString();
+        proximaDoseRef.current.value = imunizacao.proximaDoseEm.split("T")[0] || '';
+      }
+    }
+  }, [showModalEditar, imunizacao]);
 
   return (
     <>
@@ -392,7 +411,7 @@ function ImunizacaoCard({
           ) : null}
         </CardBody>
         <CardFooter className="d-flex gap-2">
-          <Button variant="secondary" onClick={handleShowModalEditar}>
+          <Button variant="secondary" onClick={() => abrirModalEditar(imunizacao)}>
             Editar
           </Button>
           <Button variant="danger" onClick={handleShowModalExcluir}>
@@ -444,6 +463,7 @@ function ImunizacaoCard({
                 type="date"
                 name="proximaDoseEm"
                 id="proximaDoseEm"
+                ref={proximaDoseRef}
               />
             </Form.Group>
           </Form>
