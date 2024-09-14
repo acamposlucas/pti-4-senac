@@ -5,15 +5,18 @@ O desenvolvimento de um aplicativo de manutenção e gerenciamento de vacinas te
 
 # Trilha
 
-- [ ] Cadastrar usuário
-- [ ] Registrar membros em família
-- [ ] Editar membro de família
-- [ ] Deletar membro de família
-- [ ] Cadastrar vacina
-- [ ] Atualizar registro de vacina
-- [ ] Deletar registro de vacina
-- [ ] Adicionar área de novidades
-- [ ] Adicionar funcionalidade de notificação
+- [X] Cadastrar usuário
+- [X] Fazer Login
+- [X] Registrar membros em família
+- [X] Editar membro de família
+- [X] Deletar membro de família
+- [X] Cadastrar vacina
+- [X] Atualizar registro de vacina
+- [X] Deletar registro de vacina
+
+# Recursos
+
+A fonte de vacinas e doses utilizadas no aplicativo foi a documentação [LEDI APS](https://integracao.esusab.ufsc.br/ledi/documentacao/index.html). A lista de doses e vacinas está disponível na pasta "assets" deste repositório.
   
 # Protótipo
 ![image](./assets/prototipo.png)
@@ -21,11 +24,17 @@ O desenvolvimento de um aplicativo de manutenção e gerenciamento de vacinas te
 # Esquema banco de dados
 ![image](./assets/db_schema.png)
 
-# Tecnologias
+# Tecnologias e bibliotecas
 - .NET 8
+- Entity Framework 8
+- React
+- React Bootstrap
+- React-Router
+- SQLite
 
 # Ferramentas utilizadas
 - Figma
 - Google Drive
 - Whatsapp
 - dbdiagram.io
+- Excalidraw
