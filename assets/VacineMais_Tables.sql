@@ -1,0 +1,55 @@
+CREATE TABLE "Usuarios" (
+	"Id" INTEGER NOT NULL CONSTRAINT "PK_Usuarios" PRIMARY KEY AUTOINCREMENT
+	,"Username" TEXT NOT NULL
+	,"Email" TEXT NOT NULL
+	,"PasswordHash" TEXT NOT NULL
+	,"Ativo" INTEGER NOT NULL DEFAULT 0
+	)
+
+CREATE TABLE "Membro" (
+	"Id" INTEGER NOT NULL CONSTRAINT "PK_Membro" PRIMARY KEY AUTOINCREMENT
+	,"FamiliaId" INTEGER NOT NULL
+	,"Nome" TEXT NOT NULL
+	,"DataNascimento" TEXT NOT NULL
+	,"CarteiraVacinacaoId" INTEGER NOT NULL DEFAULT 0
+	,CONSTRAINT "FK_Membro_Familia_FamiliaId" FOREIGN KEY ("FamiliaId") REFERENCES "Familia" ("Id") ON DELETE CASCADE
+	)
+
+CREATE TABLE "Imunobiologico" (
+	"Id" INTEGER NOT NULL CONSTRAINT "PK_Imunobiologico" PRIMARY KEY AUTOINCREMENT
+	,"Codigo" INTEGER NOT NULL
+	,"Descricao" TEXT NOT NULL
+	,"Sigla" TEXT NOT NULL
+	)
+
+CREATE TABLE "Imunizacao" (
+	"Id" INTEGER NOT NULL CONSTRAINT "PK_Imunizacao" PRIMARY KEY AUTOINCREMENT
+	,"CarteiraVacinacaoId" INTEGER NOT NULL
+	,"DoseId" INTEGER NOT NULL
+	,"ImunobiologicoId" INTEGER NOT NULL
+	,"MembroId" INTEGER NOT NULL
+	,"ProximaDoseEm" TEXT NULL
+	,CONSTRAINT "FK_Imunizacao_CarteiraVacinacao_CarteiraVacinacaoId" FOREIGN KEY ("CarteiraVacinacaoId") REFERENCES "CarteiraVacinacao" ("Id") ON DELETE CASCADE
+	,CONSTRAINT "FK_Imunizacao_Dose_DoseId" FOREIGN KEY ("DoseId") REFERENCES "Dose" ("Id") ON DELETE CASCADE
+	,CONSTRAINT "FK_Imunizacao_Imunobiologico_ImunobiologicoId" FOREIGN KEY ("ImunobiologicoId") REFERENCES "Imunobiologico" ("Id") ON DELETE CASCADE
+	,CONSTRAINT "FK_Imunizacao_Membro_MembroId" FOREIGN KEY ("MembroId") REFERENCES "Membro" ("Id") ON DELETE CASCADE
+	)
+
+CREATE TABLE "Familia" (
+	"Id" INTEGER NOT NULL CONSTRAINT "PK_Familia" PRIMARY KEY AUTOINCREMENT
+	,"UsuarioId" INTEGER NOT NULL
+	,CONSTRAINT "FK_Familia_Usuarios_UsuarioId" FOREIGN KEY ("UsuarioId") REFERENCES "Usuarios" ("Id") ON DELETE CASCADE
+	)
+
+CREATE TABLE "Dose" (
+	"Id" INTEGER NOT NULL CONSTRAINT "PK_Dose" PRIMARY KEY AUTOINCREMENT
+	,"Codigo" INTEGER NOT NULL
+	,"Descricao" TEXT NOT NULL
+	,"Sigla" TEXT NOT NULL
+	)
+
+CREATE TABLE "CarteiraVacinacao" (
+	"Id" INTEGER NOT NULL CONSTRAINT "PK_CarteiraVacinacao" PRIMARY KEY AUTOINCREMENT
+	,"MembroId" INTEGER NOT NULL
+	,CONSTRAINT "FK_CarteiraVacinacao_Membro_MembroId" FOREIGN KEY ("MembroId") REFERENCES "Membro" ("Id") ON DELETE CASCADE
+	)
